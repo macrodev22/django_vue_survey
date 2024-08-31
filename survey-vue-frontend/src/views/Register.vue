@@ -67,7 +67,7 @@ import { RouterLink, useRouter } from 'vue-router';
 
 import { reactive } from 'vue';
 import apiClient from '../services/apiClient'
-import { useStore } from '../store'
+import { useStore } from '../store' 
 
 const form = reactive({
   fullname: '',

@@ -7,6 +7,9 @@
   
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" action="#" method="POST" @submit.prevent="loginUser">
+          <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">{{ errorMsg }}  
+            <span class="p-3 cursor-pointer rounded-full hover:bg-[rgba(0,0,0,0.2)]" @click="() => errorMsg=''">X</span>
+          </div>
           <div>
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
             <div class="mt-2">
@@ -52,13 +55,15 @@
 import { LockClosedIcon } from '@heroicons/vue/24/outline';
 import { RouterLink, useRouter } from 'vue-router';
 import { useStore } from '../store'
-import { reactive } from 'vue'
+import { reactive,ref } from 'vue'
 import apiClient from '../services/apiClient';
 
 const form = reactive({
   email: '',
   password: ''
 })
+
+const errorMsg = ref('')
 
 const store = useStore()
 const router = useRouter()
@@ -69,6 +74,12 @@ const loginUser = () => {
 
     store.login(user, token)
     router.replace({ name: 'Dashboard' })
+  })
+  .catch(err => {
+
+    const { response: { data : { message } } } = err
+
+    errorMsg.value = message
   })
 }
 

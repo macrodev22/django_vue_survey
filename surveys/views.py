@@ -37,7 +37,10 @@ class AuthLogin(APIView):
         if form.is_valid():
             cleaned_data = form.cleaned_data
 
-            user = User.objects.get(email=cleaned_data['email'])
+            try:
+                user = User.objects.get(email=cleaned_data['email'])
+            except User.DoesNotExist:
+                return Response({"message": "User with this email does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
             if user.check_password(cleaned_data['password']):
                 # TODO: Add a cookie
