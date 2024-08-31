@@ -5,12 +5,6 @@
 </template>
 
 <script setup>
-import { onMounted, getCurrentInstance } from 'vue';
 
-const { emit } = getCurrentInstance()
-
-onMounted(() => {
-    emit('update-title', 'Surveys')
-})
 
 </script>

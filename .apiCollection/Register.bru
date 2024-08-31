@@ -1,0 +1,20 @@
+meta {
+  name: Register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE}}/api/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "sheddie@gmail.com",
+    "fullname": "Shedrack Kaziba",
+    "password": "testpassword",
+    "password_confirm" : "testpassword"
+  }
+}

@@ -4,6 +4,7 @@ import Dashboard from "../views/Dashboard.vue";
 import Register from "../views/Register.vue";
 import SurveyView from "../views/SurveyView.vue";
 import NotFound from "../views/NotFound.vue";
+import UserProfile from "../views/UserProfile.vue";
 
 import { useStore } from "../store"
 
@@ -21,14 +22,16 @@ const routes = [
             requiresAuth: true,
         },
         children: [
-            { path: '/surveys', name: 'Surveys', },
+            { path: '/surveys', name: 'Surveys', component: SurveyView},
             { path: '/surveys/:id', name: 'SurveysView', component: SurveyView },
             { path: '/surveys/create', name: 'SurveysCreate', component: SurveyView },
+            { path: '/profile', name: 'UserProfile', component: UserProfile },
         ]
     },
     {
         path: '/auth',
         redirect: '/login',
+        name: 'Auth',
         meta: {
             isGuest: true,
         },

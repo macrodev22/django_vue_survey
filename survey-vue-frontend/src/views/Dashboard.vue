@@ -9,7 +9,7 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                  <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</RouterLink>
+                  <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[route.name == item.to.name ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</RouterLink>
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
                   <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                     <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                        <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
+                        <a :href="item.href" @click="item.click" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
                       </MenuItem>
                     </MenuItems>
                   </transition>
@@ -72,7 +72,7 @@
               </button>
             </div>
             <div class="mt-3 space-y-1 px-2">
-              <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">{{ item.name }}</DisclosureButton>
+              <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" @click="item.click" :href="item.href" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">{{ item.name }}</DisclosureButton>
             </div>
           </div>
         </DisclosurePanel>
@@ -86,37 +86,32 @@
       <main>
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <!-- Your content -->
-           {{ store.auth }}
-           <RouterView @update-title="updateTitle" />
+           <RouterView />
         </div>
       </main>
     </div>
   </template>
   
   <script setup>
-  import { ref, reactive, onActivated } from 'vue';
+  import { ref, reactive, computed } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
   import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
   import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
   import { useStore }  from '../store'
-import { RouterLink } from 'vue-router';
+  import { RouterLink } from 'vue-router';
   
-  const title = ref('Dashboard')
-
-  const updateTitle = (newValue) => {
-    title.value = newValue
-  }
-
-  onActivated(() => updateTitle('Dashboard'))
-
   const store = useStore()
+  const route = useRoute()
+  const router = useRouter()
 
-  const changeActiveNavItem = (i) => {
-    for(const item of navigation) {
-      item.current = false
-    }
-    navigation[i].current = true
+  const title = computed(() => route.name)
+
+  const logout = async () => {
+    // Logout the user
+    await store.logout()
+    await router.replace({ name: 'Auth' })
   }
-
+  
   const user = {
     name: 'Tom Cook',
     email: 'tom@example.com',
@@ -130,8 +125,11 @@ import { RouterLink } from 'vue-router';
 
   ])
   const userNavigation = [
-    { name: 'Your Profile', href: '#' },
+    { name: 'Your Profile', click: () => router.push({ name: 'UserProfile' }) },
     { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Sign out', click: logout },
   ]
+
+  
+
   </script>

@@ -6,14 +6,26 @@ export const useStore = defineStore('store', {
             suveys: [],
             auth: {
                 user: {
-                    data: {},
-                    token: 'null'
+                    data: JSON.parse(sessionStorage.getItem("USER")) || {},
+                    token: JSON.parse(sessionStorage.getItem("TOKEN")) || null
                 }
             }
         }
     },
     actions: {
+        logout() {
+            this.auth.user.token = null
+            sessionStorage.removeItem("TOKEN")
+            sessionStorage.removeItem("USER")
+            return Promise.resolve()
+        },
+        login(user, token) {
+            this.auth.user.token = token
+            this.auth.user.data = user
 
+            sessionStorage.setItem("TOKEN", JSON.stringify(token))
+            sessionStorage.setItem("USER", JSON.stringify(user))
+        }
     },
     getters: {
 
