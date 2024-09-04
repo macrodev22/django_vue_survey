@@ -7,7 +7,15 @@
   
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" action="#" method="POST" @submit.prevent="registerUser">
+          <div v-if="errors.__all__">
+            <Error v-for="err in errors.__all__" :errorMsg="err" @close-message="() => err=''" />
+          </div>
+
           <div>
+            <div v-if="errors.email">
+              <Error v-for="err in errors.email" :errorMsg="err" @close-message="() => err=''" />
+            </div>
+            <Error :errorMsg="errorMsg" @close-message="() => errorMsg=''" />
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
             <div class="mt-2">
               <input id="email" name="email" type="email" v-model="form.email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
@@ -22,6 +30,9 @@
           </div>
   
           <div>
+            <div v-if="errors.password">
+              <Error v-for="err in errors.password" :errorMsg="err" :key="err" @close-message="() => err=''" />
+            </div>
             <div class="flex items-center justify-between">
               <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
             </div>
@@ -65,9 +76,10 @@
 import { LockClosedIcon } from '@heroicons/vue/24/outline';
 import { RouterLink, useRouter } from 'vue-router';
 
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import apiClient from '../services/apiClient'
 import { useStore } from '../store' 
+import Error from '../components/Error.vue';
 
 const form = reactive({
   fullname: '',
@@ -76,15 +88,34 @@ const form = reactive({
   password_confirm: ''
 })
 
+const errors = ref({})
+const errorMsg = ref('')
+
 const router = useRouter()
 const store = useStore()
 
 const registerUser = () => {
   apiClient.post('/register', form).then(async (res) => {
+    console.log("response", res)
     const { data: { user, token } } = res
-    
+    console.log("User, token",user, token)
+    if(!user || !token)
+      throw new Error('Invalid user or token')
     store.login(user, token)
     await router.replace({ name: 'Dashboard' })
+  })
+  .catch(err => {
+    if(err.name === 'AxiosError') {
+      const { response: { data } } = err
+      errors.value = data
+
+      if(err.response.data.error)
+      errorMsg.value = err.response.data.error
+    }
+    else {
+      console.error(err)
+      errorMsg.value = err.error
+    }
   })
 }
 </script>

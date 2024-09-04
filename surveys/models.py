@@ -64,7 +64,8 @@ class Survey(models.Model):
     user = models.ForeignKey(User, null=True ,on_delete=models.PROTECT, related_name='user_surveys')
     title = models.CharField(max_length=1000)
     slug = models.CharField(max_length=1000)
-    status = models.SmallIntegerField()
+    image = models.URLField(null=True, default=None, blank=True)
+    status = models.BooleanField(default=False)
     description = models.TextField(null=True)
     expire_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -78,7 +79,7 @@ class SurveyQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     question = models.CharField(max_length=2000)
     description = models.TextField(null=True)
-    data = models.TextField(null=True)
+    data = models.JSONField(default=dict, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 

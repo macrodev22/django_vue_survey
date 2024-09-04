@@ -7,11 +7,12 @@ import NotFound from "../views/NotFound.vue";
 import UserProfile from "../views/UserProfile.vue";
 
 import { useStore } from "../store"
+import SurveySingleView from "../views/SurveySingleView.vue";
 
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/surveys',
         // component: Dashboard,
     },
     {
@@ -22,9 +23,9 @@ const routes = [
             requiresAuth: true,
         },
         children: [
-            { path: '/surveys', name: 'Surveys', component: SurveyView},
-            { path: '/surveys/:id', name: 'SurveysView', component: SurveyView },
-            { path: '/surveys/create', name: 'SurveysCreate', component: SurveyView },
+            { path: '/surveys', name: 'Surveys', component: SurveyView },
+            { path: '/surveys/:id', name: 'SurveysView', component: SurveySingleView },
+            { path: '/surveys/create', name: 'SurveysCreate', component: SurveySingleView },
             { path: '/profile', name: 'UserProfile', component: UserProfile },
         ]
     },
