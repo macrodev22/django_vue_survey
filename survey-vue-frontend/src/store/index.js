@@ -34,6 +34,7 @@ export const useStore = defineStore('store', {
         login(user, token) {
             this.auth.user.token = token
             this.auth.user.data = user
+            this.auth.user.data.imageUrl = this.auth.user.data.image
 
             sessionStorage.setItem("TOKEN", JSON.stringify(token))
             sessionStorage.setItem("USER", JSON.stringify(user))
@@ -52,6 +53,17 @@ export const useStore = defineStore('store', {
                     console.error(err)
                     return Promise.reject(err)
                 })
+        },
+        updateUser() {
+            const userId = this.auth.user.data.id
+            this.auth.user.data.image = this.auth.user.data.imageUrl
+            const payload = { ...this.auth.user.data }
+            delete payload.imageUrl
+            apiClient.put(`/users/${userId}`, payload)
+            .then(({ data }) => {
+                this.auth.user.data = data
+                this.auth.user.data.imageUrl = data.image
+            })
         }
     },
     getters: {

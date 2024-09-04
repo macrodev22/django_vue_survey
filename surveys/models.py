@@ -26,6 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=128)  # Adjusted for hashed password
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    image = models.URLField(null=True, blank=True, default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

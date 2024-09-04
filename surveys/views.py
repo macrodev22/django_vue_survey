@@ -12,7 +12,7 @@ import base64,os,re,uuid
 
 # Create your views here.
 
-def handle_image(base64Image) ->str:
+def handle_image(base64Image, save_dir='media/images/surveys') ->str:
     # Extract MIME type and base64 data
     match = re.match(r'data:(.*?);base64,(.*)', base64Image)
     if match:
@@ -27,14 +27,14 @@ def handle_image(base64Image) ->str:
 
         # Filename
         filename = f"{uuid.uuid4()}.{mime_type.split('/')[1]}"
-        file_path = os.path.join('media/images/surveys', filename)
+        file_path = os.path.join(save_dir, filename)
         # Create the directory if it does not exist
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         with open(file_path, 'wb') as file:
             file.write(image_bytes)
             
-        return file_path.lstrip('static/')
+        return file_path
 
 
 class AuthRegister(APIView):
@@ -70,7 +70,7 @@ class AuthLogin(APIView):
 
             if user.check_password(cleaned_data['password']):
                 # TODO: Add a cookie
-                serializer = UserSerializer(user)
+                serializer = UserSerializer(user, context={ 'request': request })
                 return Response({
                     "user": serializer.data,
                     "token": user.createToken()
@@ -81,6 +81,38 @@ class AuthLogin(APIView):
         # Invalid data 
         else:
             return Response(form.errors)
+
+class AuthUser(GenericAPIView):
+    serializer_class = UserSerializer
+    def put(self, request, pk=None):
+        if pk is None:
+            return Response({'detail': 'Not possible'}, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            user = User.objects.get(pk=pk)
+            data = request.data
+            image = data.get('image')
+            if image:
+                user.image = handle_image(image, save_dir='media/images/users')
+            
+            user.save()
+            serializer = UserSerializer(user, context= { 'request': request })
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        
+        except User.DoesNotExist:
+            return Response({'detail': 'No user found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, pk=None):
+        if pk is None:
+            users = User.objects.all()
+            serializer = UserSerializer(users, many=True, context={ 'request': request })
+            return Response(serializer.data)
+        try:
+            user = User.objects.get(pk=pk)
+            return Response(UserSerializer(user, context={ 'request': request }).data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'detail': 'No user found'}, status=status.HTTP_404_NOT_FOUND)
+        
         
 class SurveyAPIView(GenericAPIView):
     serializer_class = SurveySerializer
