@@ -73,9 +73,9 @@ const router = useRouter()
 
 const loginUser = () => {
   apiClient.post('/login', form).then(res => {
-    const { data: { user, token } } = res
+    const { data: { user, token, refresh } } = res
 
-    store.login(user, token)
+    store.login(user, token, refresh)
     router.replace({ name: 'Dashboard' })
   })
     .catch(err => {

@@ -790,6 +790,10 @@ select {
   bottom: 0px;
 }
 
+.bottom-4 {
+  bottom: 1rem;
+}
+
 .left-0 {
   left: 0px;
 }
@@ -1033,6 +1037,10 @@ select {
   width: 100%;
 }
 
+.min-w-\[400px\] {
+  min-width: 400px;
+}
+
 .max-w-4xl {
   max-width: 56rem;
 }
@@ -1080,6 +1088,38 @@ select {
 
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+@keyframes fade-in-down {
+  from {
+    transform: translateY(-0.75rem) translateX(-50%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0rem) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.2s ease-in-out both;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+
+.animate-pop {
+  animation: pop 0.2s cubic-bezier(0.26, 0.53, 0.74, 1.48) both;
 }
 
 @keyframes spin {

@@ -70,10 +70,12 @@ class AuthLogin(APIView):
 
             if user.check_password(cleaned_data['password']):
                 # TODO: Add a cookie
+                tokens = user.createToken()
                 serializer = UserSerializer(user, context={ 'request': request })
                 return Response({
                     "user": serializer.data,
-                    "token": user.createToken()
+                    "token": tokens['token'],
+                    "refresh": tokens['refresh'],
                 }, status=status.HTTP_202_ACCEPTED)
             else:
                 return Response({ "message": "Invalid username or password" }, status=status.HTTP_401_UNAUTHORIZED)

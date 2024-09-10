@@ -214,10 +214,12 @@ const saveSurvey = () => {
                 console.log(res.data)
                 // Reload surveys
                 reloadSurveys()
+                store.notify({ message: 'Survey updated successfully!', type: 'success' })
                 isLoading.value = false
             })
             .catch(err => {
                 console.log(err)
+                store.notify({ message: err.message })
             })
     }
     // New survey
@@ -235,6 +237,7 @@ const saveSurvey = () => {
                 console.log(res.data)
                 // Reload surveys in store
                 reloadSurveys()
+                store.notify({ message: 'Survey created successfully!', type: 'success' })
                 isLoading.value = false
 
                 // Redirect to survey view page

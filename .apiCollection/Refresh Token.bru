@@ -1,0 +1,17 @@
+meta {
+  name: Refresh Token
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{BASE}}/api/token/refresh
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNjA3Nzk1MywiaWF0IjoxNzI1OTkxNTUzLCJqdGkiOiJjNmYxMTVkZTQwNGI0NjRhYTgwOWIwN2ViOGE5ZGVlYyIsInVzZXJfaWQiOjJ9.J-zoNo-68djbiasmckQnbhmQdkiVKMmpMNfkrglkLl0"
+  }
+}

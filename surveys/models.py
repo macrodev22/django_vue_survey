@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -56,9 +57,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-    def createToken(self) -> str:
+    def createToken(self) -> dict:
         #TODO: Generate a jwt
-        return f"token:{self.name},{self.email}"
+        tokens = {}
+        refresh = RefreshToken.for_user(user=self)
+        tokens['token'] = str(refresh.access_token)
+        tokens['refresh'] = str(refresh)
+        return tokens
 
 
 class Survey(models.Model):

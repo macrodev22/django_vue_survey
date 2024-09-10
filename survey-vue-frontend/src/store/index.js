@@ -5,10 +5,12 @@ export const useStore = defineStore('store', {
     state: () => {
         return {
             suveys: [],
+            notification: { show: false, message: '', type: null  },
             auth: {
                 user: {
                     data: JSON.parse(sessionStorage.getItem("USER")) || {},
-                    token: JSON.parse(sessionStorage.getItem("TOKEN")) || null
+                    token: JSON.parse(sessionStorage.getItem("TOKEN")) || null,
+                    refresh: JSON.parse(sessionStorage.getItem("REFRESH")) || null,
                 }
             },
             questionTypes: [
@@ -31,13 +33,15 @@ export const useStore = defineStore('store', {
             sessionStorage.removeItem("USER")
             return Promise.resolve()
         },
-        login(user, token) {
+        login(user, token, refresh) {
             this.auth.user.token = token
+            this.auth.user.refresh = refresh
             this.auth.user.data = user
             this.auth.user.data.imageUrl = this.auth.user.data.image
 
             sessionStorage.setItem("TOKEN", JSON.stringify(token))
             sessionStorage.setItem("USER", JSON.stringify(user))
+            sessionStorage.setItem("REFRESH", JSON.stringify(refresh))
         },
         deleteSurvey(id) {
             return apiClient.delete(`/surveys/${id}`)
@@ -64,6 +68,12 @@ export const useStore = defineStore('store', {
                 this.auth.user.data = data
                 this.auth.user.data.imageUrl = data.image
             })
+        },
+        notify({ message, type = null }) {
+            setTimeout(() => this.notification.show = false, 3000)
+            this.notification.message = message
+            this.notification.type = type
+            this.notification.show = true
         }
     },
     getters: {

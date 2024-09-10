@@ -11,7 +11,7 @@
         </RouterLink>
     </div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 text-black">
-        <SurveyListItem v-for="survey in surveys" :key="survey.id" :survey="survey"
+        <SurveyListItem v-for="survey,index in surveys" :key="survey.id" :survey="survey" class="animate-pop" :style="{ animationDelay: `${index * 0.2}s`, opacity: 0 }"
             @delete-survey="deleteSurvey(survey.id)" />
     </div>
 </template>
