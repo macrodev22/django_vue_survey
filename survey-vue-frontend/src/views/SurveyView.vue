@@ -23,7 +23,7 @@ import { RouterLink } from 'vue-router';
 import SurveyListItem from '../components/SurveyListItem.vue';
 
 const store = useStore()
-const surveys = computed(() => store.suveys)
+const surveys = computed(() => store.surveys)
 
 const deleteSurvey = (surveyID) => {
     if (confirm('Are you sure you want to delete this survey? This operation cannot be undone!')) {

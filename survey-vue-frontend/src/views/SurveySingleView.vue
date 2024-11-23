@@ -127,7 +127,7 @@ const isNewSurvey = () => {
 const reloadSurveys = () => {
     apiClient.get('/surveys')
         .then(({ data }) => {
-            store.suveys = data
+            store.surveys = data
             // console.log('Surveys reloaded')
             return Promise.resolve()
         })
@@ -183,7 +183,7 @@ watch(date_time_expiry, () => {
 
 onMounted(() => {
     // Load surveys if none
-    if (!store.suveys) {
+    if (!store.surveys) {
         reloadSurveys()
             .then(() => retrieveCurrentSurvey())
             .catch(err => console.error(err))

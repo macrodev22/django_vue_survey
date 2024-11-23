@@ -5,7 +5,7 @@
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+              <img class="h-8 w-8" src="/favicon.svg"
                 alt="Your Company" />
             </div>
             <div class="hidden md:block">
@@ -129,7 +129,7 @@ onMounted(() => {
   apiClient.get('/surveys')
     .then(({ data }) => {
       // Add image url to surveys
-      store.suveys = data.map(s => {
+      store.surveys = data.map(s => {
         s.image_url = s.image
         return s
       })

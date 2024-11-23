@@ -4,7 +4,7 @@ import apiClient from "../services/apiClient";
 export const useStore = defineStore('store', {
     state: () => {
         return {
-            suveys: [],
+            surveys:  JSON.parse(localStorage.getItem('surveys')) || [],
             notification: { show: false, message: '', type: null  },
             auth: {
                 user: {
@@ -50,7 +50,7 @@ export const useStore = defineStore('store', {
                     return apiClient.get('/surveys')
                 })
                 .then(({ data }) => {
-                    this.suveys = data
+                    this.surveys = data
                     return Promise.resolve()
                 })
                 .catch(err => {
@@ -78,7 +78,7 @@ export const useStore = defineStore('store', {
     },
     getters: {
         getSurvey(state) {
-            return (id) => state.suveys.find(s => s.id == id)
+            return (id) => state.surveys.find(s => s.id == id)
         },
     }
 })

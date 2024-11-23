@@ -8,6 +8,11 @@ import router from './router'
 import './input.css'
 
 const pinia = createPinia()
+pinia.use(({store}) => {
+    store.$subscribe((mutation, state) => {
+        localStorage.setItem('surveys',JSON.stringify(state.surveys))
+    })
+})
 
 createApp(App)
     .use(pinia)
